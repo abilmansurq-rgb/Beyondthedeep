@@ -3,13 +3,13 @@
 	"id": "beyondthedeep",
 	"version": "${version}",
 	"name": "BeyondTheDeep",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Mod about going reallyy deeep....",
 	"authors": [
-		"Me!"
+		"Abakio"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "",
+		"sources": ""
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/beyondthedeep/icon.png",

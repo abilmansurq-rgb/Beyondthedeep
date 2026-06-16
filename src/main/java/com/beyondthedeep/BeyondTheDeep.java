@@ -1,6 +1,7 @@
 package com.beyondthedeep;
 
 import com.beyondthedeep.blocks.ModBlocks;
+import com.beyondthedeep.items.ModItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -10,6 +11,13 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.block.Block;
+
+// В методе onInitialize добавь:
+// Это скажет игре, что void_ore — это руда, которую можно копать киркой
+// и для нее нужна железная кирка.
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +37,14 @@ public class BeyondTheDeep implements ModInitializer {
 					.icon(() -> new ItemStack(com.beyondthedeep.blocks.ModBlocks.VOID_ORE.asItem()))
 					.entries((context, entries) -> {
 						entries.add(com.beyondthedeep.blocks.ModBlocks.VOID_ORE.asItem());
+						entries.add(ModItems.VOID_SHARD.asItem());
 					})
 					.build()
 	);
 	@Override
 	public void onInitialize() {
 		ModBlocks.registerModBlocks();
+		ModItems.registerModItems();
 		LOGGER.info("Hello Fabric world!");
 	}
 }

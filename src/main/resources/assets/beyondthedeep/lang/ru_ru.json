@@ -1,4 +1,5 @@
 {
   "block.beyondthedeep.void_ore": "Пустотная руда",
-  "itemGroup.beyondthedeep.beyond_the_deep_tab": "Beyond The Deep"
+  "itemGroup.beyondthedeep.beyond_the_deep_tab": "Beyond The Deep",
+  "item.beyondthedeep.void_shard": "Пустотный Осколок"
 }
