@@ -1,5 +1,7 @@
 {
   "block.beyondthedeep.void_ore": "Void Ore",
   "itemGroup.beyondthedeep.beyond_the_deep_tab": "Beyond The Deep",
-  "item.beyondthedeep.void_shard": "Void Shard"
+  "item.beyondthedeep.void_shard": "Void Shard",
+  "item.beyondthedeep.raw_void_alloy": "Raw Void Alloy",
+  "item.beyondthedeep.void_alloy": "Void Alloy"
 }

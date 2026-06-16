@@ -36,8 +36,10 @@ public class BeyondTheDeep implements ModInitializer {
 					.displayName(net.minecraft.text.Text.translatable("itemGroup.beyondthedeep.beyond_the_deep_tab"))
 					.icon(() -> new ItemStack(com.beyondthedeep.blocks.ModBlocks.VOID_ORE.asItem()))
 					.entries((context, entries) -> {
-						entries.add(com.beyondthedeep.blocks.ModBlocks.VOID_ORE.asItem());
+						entries.add(ModBlocks.VOID_ORE.asItem());
 						entries.add(ModItems.VOID_SHARD.asItem());
+						entries.add(ModItems.RAW_VOID_ALLOY.asItem());
+						entries.add(ModItems.VOID_ALLOY.asItem());
 					})
 					.build()
 	);

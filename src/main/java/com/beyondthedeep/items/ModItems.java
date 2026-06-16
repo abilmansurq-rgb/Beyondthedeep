@@ -11,6 +11,10 @@ public class ModItems {
     // Создаем предмет
     public static final Item VOID_SHARD = registerItem("void_shard",
             new Item(new FabricItemSettings()));
+    public static final Item RAW_VOID_ALLOY = registerItem("raw_void_alloy",
+            new Item(new FabricItemSettings()));
+    public static final Item VOID_ALLOY = registerItem("void_alloy",
+            new Item(new FabricItemSettings()));
 
     // Вспомогательный метод для регистрации
     private static Item registerItem(String name, Item item) {

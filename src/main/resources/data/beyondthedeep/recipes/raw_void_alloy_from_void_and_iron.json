@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS ",
+    "SIS",
+    " SS"
+  ],
+  "key": {
+    "S": { "item": "beyondthedeep:void_shard" },
+    "I": { "item": "minecraft:iron_ingot" }
+  },
+  "result": { "item": "beyondthedeep:raw_void_alloy", "count": 1 }
+}
