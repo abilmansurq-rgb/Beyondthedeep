@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "AAA",
+    "A A",
+    "A A"
+  ],
+  "key": {
+    "A": { "item": "beyondthedeep:void_alloy" }
+  },
+  "result": { "item": "beyondthedeep:void_leggins", "count": 1 }
+}

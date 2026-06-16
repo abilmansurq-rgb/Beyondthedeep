@@ -1,0 +1,7 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": { "item": "beyondthedeep:raw_void_alloy" },
+  "result": "beyondthedeep:void_alloy",
+  "experience": 0.7,
+  "cookingtime": 200
+}

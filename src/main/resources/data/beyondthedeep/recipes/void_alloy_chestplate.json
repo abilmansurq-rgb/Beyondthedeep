@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "A A",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": { "item": "beyondthedeep:void_alloy" }
+  },
+  "result": { "item": "beyondthedeep:void_chestplate", "count": 1 }
+}
