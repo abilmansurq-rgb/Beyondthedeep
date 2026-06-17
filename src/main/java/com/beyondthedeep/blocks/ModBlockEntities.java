@@ -17,5 +17,6 @@ public class ModBlockEntities {
                 FabricBlockEntityTypeBuilder.create(MobFarmBlockEntity::new,
                         // СЮДА НУЖНО БУДЕТ ДОБАВИТЬ САМ БЛОК (который мы создадим в п.2)
                         ModBlocks.MOB_FARM_BLOCK).build());
+        BeyondTheDeep.LOGGER.info("Successfully registered Block Entities for Beyond The Deep.");
     }
 }

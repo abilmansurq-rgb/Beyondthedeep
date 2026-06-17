@@ -1,5 +1,6 @@
 package com.beyondthedeep.items;
 
+import com.beyondthedeep.items.custom.VoidRequiemItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
@@ -41,6 +42,12 @@ public class ModItems {
                     new FabricItemSettings().maxCount(1) // НАСТРОЙКИ: maxCount(1) нужен, так как это уникальный инструмент
             )
     );
+    public static final Item VOID_REQUIEM = registerItem("void_requiem",
+            new VoidRequiemItem(
+                    ModToolMaterials.VOID_MATERIAL,
+                    4,
+                    -2.5f,
+                    new FabricItemSettings().maxCount(1)));
 
 
     // Вспомогательный метод для регистрации

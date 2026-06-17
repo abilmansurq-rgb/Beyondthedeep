@@ -13,5 +13,7 @@
   "tooltip.beyondthedeep.empty_card": "Пустая карточка",
   "item.beyondthedeep.soul_extractor": "Вырыватель Душ",
   "block.beyondthedeep.mob_farm_block": "Переработчик Сущности",
-  "guiName.beyondthedeep.mobFarm":"Переработчик Сущности"
+  "guiName.beyondthedeep.mobFarm":"Переработчик Сущности",
+  "tooltip.beyondthedeep.damage_bonus": "Резонанс Души",
+  "item.beyondthedeep.void_requiem": "Реквием Бездны"
 }

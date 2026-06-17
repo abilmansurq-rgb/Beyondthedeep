@@ -14,5 +14,6 @@ public class ModScreenHandlers {
         MOB_FARM_SCREEN_HANDLER = Registry.register(Registries.SCREEN_HANDLER,
                 new Identifier("beyondthedeep", "mob_farm_handler"),
                 new ExtendedScreenHandlerType<>(MobFarmScreenHandler::new));
+        BeyondTheDeep.LOGGER.info("Successfully registered Block Entities for Beyond The Deep.");
     }
 }

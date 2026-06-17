@@ -13,5 +13,7 @@
   "tooltip.beyondthedeep.empty_card": "Empty Card",
   "item.beyondthedeep.soul_extractor": "Soul Extractor",
   "block.beyondthedeep.mob_farm_block": "Abyssal Processor",
-  "guiName.beyondthedeep.mobFarm": "Abyssal Processor"
+  "guiName.beyondthedeep.mobFarm": "Abyssal Processor",
+  "tooltip.beyondthedeep.damage_bonus": "Soul Resonance",
+  "item.beyondthedeep.void_requiem": "Void Requiem"
 }

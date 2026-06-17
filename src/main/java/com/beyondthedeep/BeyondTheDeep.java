@@ -2,6 +2,7 @@ package com.beyondthedeep;
 
 import com.beyondthedeep.blocks.ModBlockEntities;
 import com.beyondthedeep.blocks.ModBlocks;
+import com.beyondthedeep.event.ModEvents;
 import com.beyondthedeep.items.MobCardItem;
 import com.beyondthedeep.items.ModItems;
 import com.beyondthedeep.screen.ModScreenHandlers;
@@ -40,6 +41,7 @@ public class BeyondTheDeep implements ModInitializer {
 						entries.add(ModBlocks.MOB_FARM_BLOCK.asItem());
 						entries.add(ModItems.MOB_CARD.asItem());
 						entries.add(ModItems.SOUL_EXTRACTOR.asItem());
+						entries.add(ModItems.VOID_REQUIEM.asItem());
 						entries.add(ModItems.VOID_HELMET.asItem());
 						entries.add(ModItems.VOID_CHESTPLATE.asItem());
 						entries.add(ModItems.VOID_LEGGINGS.asItem());
@@ -50,10 +52,13 @@ public class BeyondTheDeep implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		LOGGER.info("Starting initialization of Beyond The Deep...");
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
+		ModEvents.registerEvents();
 		ModBlockEntities.registerAllBlockEntities(); // ДОБАВЬ ЭТО
 		ModScreenHandlers.registerAllScreenHandlers(); // ДОБАВЬ ЭТО
+
 
 		// Регистрация события смерти
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
@@ -80,6 +85,6 @@ public class BeyondTheDeep implements ModInitializer {
 			}
 		});
 
-		LOGGER.info("Beyond The Deep initialized!");
+		LOGGER.info("Beyond The Deep: All modules initialized successfully.");
 	}
 }
