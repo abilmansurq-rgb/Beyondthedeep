@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"com.beyondthedeep.BeyondTheDeep"
+		],
+		"client": [
+			"com.beyondthedeep.BeyondTheDeepClient"
 		]
 	},
 	"mixins": [

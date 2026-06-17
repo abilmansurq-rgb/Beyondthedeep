@@ -4,6 +4,7 @@ import com.beyondthedeep.blocks.ModBlockEntities;
 import com.beyondthedeep.blocks.ModBlocks;
 import com.beyondthedeep.items.MobCardItem;
 import com.beyondthedeep.items.ModItems;
+import com.beyondthedeep.screen.ModScreenHandlers;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
@@ -35,6 +36,8 @@ public class BeyondTheDeep implements ModInitializer {
 						entries.add(ModItems.VOID_SHARD.asItem());
 						entries.add(ModItems.RAW_VOID_ALLOY.asItem());
 						entries.add(ModItems.VOID_ALLOY.asItem());
+						// useful items such as:armor,soul extractor and more
+						entries.add(ModBlocks.MOB_FARM_BLOCK.asItem());
 						entries.add(ModItems.MOB_CARD.asItem());
 						entries.add(ModItems.SOUL_EXTRACTOR.asItem());
 						entries.add(ModItems.VOID_HELMET.asItem());
@@ -50,6 +53,7 @@ public class BeyondTheDeep implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModBlockEntities.registerAllBlockEntities(); // ДОБАВЬ ЭТО
+		ModScreenHandlers.registerAllScreenHandlers(); // ДОБАВЬ ЭТО
 
 		// Регистрация события смерти
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
