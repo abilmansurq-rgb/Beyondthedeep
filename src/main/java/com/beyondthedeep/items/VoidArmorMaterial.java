@@ -6,6 +6,7 @@ import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Util;
 
 import java.util.EnumMap;
 import java.util.function.Supplier;
@@ -18,9 +19,19 @@ public class VoidArmorMaterial implements ArmorMaterial {
         PROTECTION.put(ArmorItem.Type.CHESTPLATE, 6);
         PROTECTION.put(ArmorItem.Type.HELMET, 2);
     }
+    // Добавь это поле в начало класса
+    private static final EnumMap<ArmorItem.Type, Integer> BASE_DURABILITY = Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+        map.put(ArmorItem.Type.BOOTS, 13);
+        map.put(ArmorItem.Type.LEGGINGS, 15);
+        map.put(ArmorItem.Type.CHESTPLATE, 16);
+        map.put(ArmorItem.Type.HELMET, 11);
+    });
 
+    // И измени метод так:
     @Override
-    public int getDurability(ArmorItem.Type type) { return 25; }
+    public int getDurability(ArmorItem.Type type) {
+        return BASE_DURABILITY.get(type) * 25; // 25 - это множитель прочности (как у незерита)
+    }
     @Override
     public int getProtection(ArmorItem.Type type) { return PROTECTION.get(type); }
     @Override

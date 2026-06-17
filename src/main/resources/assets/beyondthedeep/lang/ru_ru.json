@@ -3,5 +3,12 @@
   "itemGroup.beyondthedeep.beyond_the_deep_tab": "Beyond The Deep",
   "item.beyondthedeep.void_shard": "Пустотный Осколок",
   "item.beyondthedeep.raw_void_alloy": "Сырой пустотный сплав",
-  "item.beyondthedeep.void_alloy": "Пустотный сплав"
+  "item.beyondthedeep.void_alloy": "Пустотный сплав",
+  "item.beyondthedeep.void_helmet": "Пустотный Шлем",
+  "item.beyondthedeep.void_chestplate": "Пустотный Нагрудник",
+  "item.beyondthedeep.void_leggings": "Пустотные Поножи",
+  "item.beyondthedeep.void_boots": "Пустотные Ботинки",
+  "item.beyondthedeep.mob_card": "Карточка сущности",
+  "tooltip.beyondthedeep.mob_name": "Сущность: %s",
+  "tooltip.beyondthedeep.empty_card": "Пустая карточка"
 }

@@ -3,5 +3,12 @@
   "itemGroup.beyondthedeep.beyond_the_deep_tab": "Beyond The Deep",
   "item.beyondthedeep.void_shard": "Void Shard",
   "item.beyondthedeep.raw_void_alloy": "Raw Void Alloy",
-  "item.beyondthedeep.void_alloy": "Void Alloy"
+  "item.beyondthedeep.void_alloy": "Void Alloy",
+  "item.beyondthedeep.void_helmet": "Void Helmet",
+  "item.beyondthedeep.void_chestplate": "Void Chestplate",
+  "item.beyondthedeep.void_leggings": "Void Leggings",
+  "item.beyondthedeep.void_boots": "Void Boots",
+  "item.beyondthedeep.mob_card": "Mob Card",
+  "tooltip.beyondthedeep.mob_name": "Entity: %s",
+  "tooltip.beyondthedeep.empty_card": "Empty Card"
 }
