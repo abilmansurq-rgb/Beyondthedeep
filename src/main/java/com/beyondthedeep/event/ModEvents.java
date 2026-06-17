@@ -11,8 +11,19 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class ModEvents {
+    // Хранилище теперь поддерживает список мечей для каждого игрока
+    private static final Map<UUID, List<ItemStack>> deathStorage = new HashMap<>();
+
+    public static void saveSwordsForPlayer(UUID uuid, List<ItemStack> stacks) {
+        deathStorage.put(uuid, stacks);
+    }
 
     public static void registerEvents() {
         registerAttackEvents();
@@ -24,12 +35,8 @@ public class ModEvents {
         ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
             if (entity instanceof net.minecraft.entity.player.PlayerEntity player) {
                 ItemStack stack = player.getMainHandStack();
-
-                // Проверяем, что в руке наш меч
                 if (stack.getItem() instanceof VoidRequiemItem) {
                     float gain = (killedEntity instanceof net.minecraft.entity.mob.Monster) ? 0.010f : 0.005f;
-
-                    // Обновляем NBT бонус урона
                     NbtCompound nbt = stack.getOrCreateNbt();
                     float currentBonus = nbt.getFloat("DamageBonus");
                     nbt.putFloat("DamageBonus", currentBonus + gain);
@@ -39,42 +46,37 @@ public class ModEvents {
     }
 
     public static void registerDeathEvents() {
-        // COPY_FROM срабатывает при смерти, позволяя перенести вещи со старого игрока на нового
-        ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {
-            System.out.println("DEBUG: Попытка переноса меча при возрождении!");
-            // Ищем меч в инвентаре УМЕРШЕГО игрока
-            for (int i = 0; i < oldPlayer.getInventory().size(); i++) {
-                ItemStack stack = oldPlayer.getInventory().getStack(i);
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            // Достаем список спасенных мечей
+            List<ItemStack> savedStacks = deathStorage.remove(newPlayer.getUuid());
 
-                if (stack.getItem() instanceof VoidRequiemItem) {
+            if (savedStacks != null && !savedStacks.isEmpty()) {
+                for (ItemStack stack : savedStacks) {
+                    // Применяем логику штрафа к бонусу
                     NbtCompound nbt = stack.getOrCreateNbt();
                     float bonus = nbt.getFloat("DamageBonus");
 
-                    // Применяем штраф 20% при каждой смерти
                     if (bonus > 0.05f) {
-                        float newBonus = bonus * 0.8f;
-                        nbt.putFloat("DamageBonus", newBonus);
+                        nbt.putFloat("DamageBonus", bonus * 0.8f);
 
-                        // Звуковой эффект "потухания" силы
-                        newPlayer.getWorld().playSound(null, newPlayer.getX(), newPlayer.getY(), newPlayer.getZ(),
-                                SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1.0f, 0.5f);
-
-                        // Визуальный эффект частицы души
-                        if (newPlayer.getWorld() instanceof ServerWorld serverWorld) {
-                            serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL,
-                                    newPlayer.getX(), newPlayer.getY() + 1.0, newPlayer.getZ(),
-                                    20, 0.5, 0.5, 0.5, 0.1);
-                        }
-
-                        // Уведомление в Action Bar
-                        newPlayer.sendMessage(Text.translatable("message.beyondthedeep.void_echo").formatted(Formatting.RED), true);
+                        // Звуковые и визуальные эффекты (проигрываются один раз для игрока)
                     } else {
                         nbt.putFloat("DamageBonus", 0.0f);
                     }
-
-                    // "Телепортация" меча новому игроку (Soulbound)
+                    // Возвращаем каждый меч
                     newPlayer.getInventory().insertStack(stack);
                 }
+
+                // Эффекты и сообщение
+                newPlayer.getWorld().playSound(null, newPlayer.getX(), newPlayer.getY(), newPlayer.getZ(),
+                        SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1.0f, 0.5f);
+
+                if (newPlayer.getWorld() instanceof ServerWorld serverWorld) {
+                    serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL,
+                            newPlayer.getX(), newPlayer.getY() + 1.0, newPlayer.getZ(),
+                            20, 0.5, 0.5, 0.5, 0.1);
+                }
+                newPlayer.sendMessage(Text.translatable("message.beyondthedeep.void_echo").formatted(Formatting.RED), true);
             }
         });
     }
