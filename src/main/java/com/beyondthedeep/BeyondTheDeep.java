@@ -1,5 +1,6 @@
 package com.beyondthedeep;
 
+import com.beyondthedeep.blocks.ModBlockEntities;
 import com.beyondthedeep.blocks.ModBlocks;
 import com.beyondthedeep.items.MobCardItem;
 import com.beyondthedeep.items.ModItems;
@@ -48,6 +49,7 @@ public class BeyondTheDeep implements ModInitializer {
 	public void onInitialize() {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
+		ModBlockEntities.registerAllBlockEntities(); // ДОБАВЬ ЭТО
 
 		// Регистрация события смерти
 		ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {

@@ -11,5 +11,6 @@
   "item.beyondthedeep.mob_card": "Mob Card",
   "tooltip.beyondthedeep.mob_name": "Entity: %s",
   "tooltip.beyondthedeep.empty_card": "Empty Card",
-  "item.beyondthedeep.soul_extractor": "Soul Extractor"
+  "item.beyondthedeep.soul_extractor": "Soul Extractor",
+  "item.beyondthedeep.mob_farm_block": "Abyssal Processor"
 }

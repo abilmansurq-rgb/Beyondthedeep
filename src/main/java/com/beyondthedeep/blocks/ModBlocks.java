@@ -15,7 +15,8 @@ import net.minecraft.util.math.intprovider.UniformIntProvider;
 import static net.minecraft.block.Blocks.STONE;
 
 public class ModBlocks {
-
+    public static final Block MOB_FARM_BLOCK = registerBlock("mob_farm_block",
+            new MobFarmBlock(FabricBlockSettings.create().strength(4.0f)));
     // Создаем саму Пустотную Руду (копируем прочность алмазной руды)
     public static final Block VOID_ORE = registerBlock("void_ore",
             new ExperienceDroppingBlock(FabricBlockSettings.copyOf(STONE).strength(2f), UniformIntProvider.create(3, 9)));

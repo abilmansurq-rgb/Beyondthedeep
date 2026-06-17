@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "beyondthedeep:block/mob_farm_block"
+    }
+  }
+}

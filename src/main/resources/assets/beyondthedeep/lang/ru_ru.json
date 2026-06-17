@@ -11,5 +11,6 @@
   "item.beyondthedeep.mob_card": "Карточка сущности",
   "tooltip.beyondthedeep.mob_name": "Сущность: %s",
   "tooltip.beyondthedeep.empty_card": "Пустая карточка",
-  "item.beyondthedeep.soul_extractor": "Вырыватель Душ"
+  "item.beyondthedeep.soul_extractor": "Вырыватель Душ",
+  "item.beyondthedeep.mob_farm_block": "Переработчик Сущности"
 }
