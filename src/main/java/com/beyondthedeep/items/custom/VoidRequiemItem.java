@@ -1,5 +1,6 @@
 package com.beyondthedeep.items.custom;
 
+import com.beyondthedeep.items.SoulboundItem;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -19,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class VoidRequiemItem extends SwordItem {
+public class VoidRequiemItem extends SwordItem implements SoulboundItem {
     private static final UUID DAMAGE_BONUS_UUID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
 
     public VoidRequiemItem(ToolMaterial toolMaterial, int attackDamage, float attackSpeed, Settings settings) {
