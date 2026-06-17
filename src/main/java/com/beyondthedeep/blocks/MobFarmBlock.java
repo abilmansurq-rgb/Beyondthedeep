@@ -47,4 +47,22 @@ public class MobFarmBlock extends BlockWithEntity {
     public <T extends net.minecraft.block.entity.BlockEntity> net.minecraft.block.entity.BlockEntityTicker<T> getTicker(World world, BlockState state, net.minecraft.block.entity.BlockEntityType<T> type) {
 // Замени свою строку 48 на эту:
         return checkType(type, ModBlockEntities.MOB_FARM_BLOCK_ENTITY, MobFarmBlockEntity::tick);
-    }}
+    }
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getBlock() != newState.getBlock()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof MobFarmBlockEntity) {
+                MobFarmBlockEntity inv = (MobFarmBlockEntity) blockEntity;
+                for (int i = 0; i < inv.size(); i++) {
+                    net.minecraft.item.ItemStack stack = inv.getStack(i);
+                    if (!stack.isEmpty()) {
+                        net.minecraft.block.Block.dropStack(world, pos, stack);
+                    }
+                }
+            }
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
+}

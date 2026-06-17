@@ -10,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -80,32 +81,76 @@ public class MobFarmBlockEntity extends BlockEntity implements ExtendedScreenHan
         progress = nbt.getInt("mob_farm.progress");
         fuelLeft = nbt.getInt("mob_farm.fuelLeft"); // ДОБАВЬ ЭТУ СТРОКУ
     }
-    public static void tick(net.minecraft.world.World world, BlockPos pos, BlockState state, MobFarmBlockEntity entity) {
-        if (world.isClient) return;
 
-        // Слот 1 — это слот топлива
-        ItemStack fuelStack = entity.inventory.get(1);
+    private void spawnMobDrop() {
+        ItemStack cardStack = this.inventory.get(0); // Карта в слоте 0
 
-        // Если топлива нет, но в слоте лежит подходящий предмет — заправляем
-        if (entity.fuelLeft <= 0 && fuelStack.isIn(FUEL_TAG)) {
-            fuelStack.decrement(1); // Забираем 1 предмет
-            entity.fuelLeft = 1600; // Даем 1600 единиц энергии (16 циклов)
-        }
+        // Проверяем, есть ли у предмета вообще NBT и нужный нам тег
+        if (cardStack.hasNbt() && cardStack.getNbt().contains("MobName")) {
+            String mobName = cardStack.getNbt().getString("MobName");
 
-        // Если есть энергия — работаем
-        if (entity.fuelLeft > 0) {
-            // Проверяем слот 0 (например, "карточка" или ресурс для переработки)
-            if (!entity.inventory.get(0).isEmpty()) {
-                entity.progress++;
-                entity.fuelLeft--; // Расходуем энергию каждый тик
+            //System.out.println("Ферма читает карту: " + mobName); // Теперь увидишь правильное имя!
 
-                if (entity.progress >= 100) {
-                    entity.progress = 0;
-                    // TODO: Здесь будет логика спавна дропа
+            // Получаем дроп на основе ID
+            ItemStack loot = getLootForMob(mobName);
+
+            // Пытаемся положить в слоты 2, 3, 4
+            for (int i = 2; i <= 4; i++) {
+                ItemStack slotStack = this.inventory.get(i);
+
+                // Если слот пуст или там лежит такой же предмет и есть место
+                if (slotStack.isEmpty()) {
+                    this.inventory.set(i, loot);
+                    return;
+                } else if (slotStack.isOf(loot.getItem()) && slotStack.getCount() < slotStack.getMaxCount()) {
+                    slotStack.increment(loot.getCount());
+                    return;
                 }
             }
         }
+    }
 
+    // Отдельный метод для чистоты кода
+    private ItemStack getLootForMob(String mobName) {
+        String cleanId = mobName.toLowerCase().replace(" ", "_"); // Уберет пробелы и большие буквы
+        return switch (cleanId) {
+            case "slime" -> new ItemStack(net.minecraft.item.Items.SLIME_BALL, 2);
+            case "wither_skeleton" -> new ItemStack(net.minecraft.item.Items.COAL, 1);
+            case "zombie" -> new ItemStack(net.minecraft.item.Items.ROTTEN_FLESH, 2);
+            default -> new ItemStack(net.minecraft.item.Items.DIRT, 1);
+        };
+    }
+
+    public static void tick(net.minecraft.world.World world, BlockPos pos, BlockState state, MobFarmBlockEntity entity) {
+        if (world.isClient) return;
+
+        ItemStack fuelStack = entity.inventory.get(1);
+        ItemStack cardStack = entity.inventory.get(0);
+
+        // ДИАГНОСТИКА: выводим состояние слотов
+        // (убери этот вывод после того, как поймешь причину)
+        //if (entity.progress % 20 == 0) { // Выводить раз в секунду, чтобы не спамить
+           // System.out.println("Топливо: " + entity.fuelLeft + ", Карта имеет NBT: " + cardStack.hasNbt());
+       // }
+
+        // Блок заправки
+        if (entity.fuelLeft <= 0 && fuelStack.isOf(com.beyondthedeep.items.ModItems.VOID_SHARD)) {
+            fuelStack.decrement(1);
+            entity.fuelLeft = 1600;
+            //System.out.println("Заправлено!");
+        }
+
+        // Блок работы
+        if (entity.fuelLeft > 0) {
+            if (cardStack.hasNbt() && cardStack.getNbt().contains("MobName")) {
+                entity.progress++;
+                entity.fuelLeft--;
+                if (entity.progress >= 100) {
+                    entity.progress = 0;
+                    entity.spawnMobDrop();
+                }
+            }
+        }
         markDirty(world, pos, state);
     }
 }
