@@ -17,20 +17,10 @@
 	"entrypoints": {
 		"main": [
 			"com.beyondthedeep.BeyondTheDeep"
-		],
-		"client": [
-			"com.beyondthedeep.client.BeyondTheDeepClient"
-		],
-		"fabric-datagen": [
-			"com.beyondthedeep.client.BeyondTheDeepDataGenerator"
 		]
 	},
 	"mixins": [
-		"beyondthedeep.mixins.json",
-		{
-			"config": "beyondthedeep.client.mixins.json",
-			"environment": "client"
-		}
+		"beyondthedeep.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.3",
