@@ -19,7 +19,7 @@ public class ModToolMaterials {
         public int getMiningLevel() { return 2; }
 
         @Override
-        public int getEnchantability() { return 15; }
+        public int getEnchantability() { return 25; }
 
         @Override
         public Ingredient getRepairIngredient() {

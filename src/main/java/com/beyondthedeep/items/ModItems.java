@@ -36,7 +36,7 @@ public class ModItems {
     public static final Item SOUL_EXTRACTOR = registerItem("soul_extractor",
             new VoidTool(
                     ModToolMaterials.VOID_MATERIAL, // МАТЕРИАЛ: можно заменить на свой кастомный (например, VOID_MATERIAL)
-                    4,                  // УРОН: чем меньше, тем дольше моб будет жить (идеально для "вытягивания")
+                    1,                  // УРОН: чем меньше, тем дольше моб будет жить (идеально для "вытягивания")
                     -2.4F,              // СКОРОСТЬ АТАКИ: стандарт для мечей
                     new FabricItemSettings().maxCount(1) // НАСТРОЙКИ: maxCount(1) нужен, так как это уникальный инструмент
             )

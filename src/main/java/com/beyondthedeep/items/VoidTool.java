@@ -5,12 +5,18 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 
 // Мы наследуемся от VoidItem, поэтому все инструменты автоматически получают свечение (hasGlint)
-public class VoidTool extends VoidItem {
+public class VoidTool extends SwordItem {
     private final ToolMaterial material;
 
+    // В конструктор передаем те же параметры, которые требует SwordItem
     public VoidTool(ToolMaterial material, int attackDamage, float attackSpeed, Settings settings) {
-        super(settings);
-        this.material = material; // Теперь переменная используется!
+        // Передаем ВСЕ параметры в родительский класс
+        super(material, attackDamage, attackSpeed, settings);
+        this.material = material;
+    }
+    @Override
+    public boolean hasGlint(ItemStack stack) {
+        return true; // Предмет будет сиять всегда
     }
 
     /*
