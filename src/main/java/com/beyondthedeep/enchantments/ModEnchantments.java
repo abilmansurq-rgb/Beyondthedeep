@@ -10,30 +10,50 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class ModEnchantments {
-    // Регистрация зачарования "Лимит Бездны"
+
+    // --- ОСОБЫЕ (Классовые зачарования) ---
     public static final Enchantment VOID_LIMIT = new VoidLimitEnchantment();
-    // Регистрация зачарования "Ускорение Эха"
     public static final Enchantment ECHO_ACCELERATION = new EchoAccelerationEnchantment();
 
-    // base enchantments
-// --- ОРУЖИЕ (Универсальные) ---
+    // --- ОРУЖИЕ ---
+    // ABSORB: Пылесос лута и опыта, хил и сила на высоких уровнях
     public static final Enchantment ABSORB = new BaseEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, false, 3);
+    // RIFT: Доп. урон и оглушение (Slowness) врагов
     public static final Enchantment RIFT = new BaseEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.WEAPON, new EquipmentSlot[]{EquipmentSlot.MAINHAND}, false, 3);
 
-    // --- БРОНЯ (Универсальные) ---
-    public static final Enchantment VOID_PULL = new BaseEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentTarget.ARMOR, EquipmentSlot.values(), false, 3);
-    public static final Enchantment VOID_STABILITY = new BaseEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentTarget.ARMOR, EquipmentSlot.values(), false, 3);
+    // --- БРОНЯ ---
+    // VOID_NULLIFICATION: Активное парирование урона на нагруднике
+    public static final Enchantment VOID_NULLIFICATION = new BaseEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.ARMOR_CHEST, new EquipmentSlot[]{EquipmentSlot.CHEST}, false, 3);
 
+    // --- ШЛЕМ ---
+    // VOID_AURA: Пассивная скрытность, мобы теряют агро на расстоянии > 2 блоков
+    public static final Enchantment VOID_AURA = new BaseEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.ARMOR_HEAD, new EquipmentSlot[]{EquipmentSlot.HEAD}, false, 1);
 
+    // --- БОТИНКИ ---
+    // SHADOW_TREADS: Скорость I при низком уровне освещения (без отображения в HUD)
+    public static final Enchantment SHADOW_TREADS = new BaseEnchantment(Enchantment.Rarity.UNCOMMON, EnchantmentTarget.ARMOR_FEET, new EquipmentSlot[]{EquipmentSlot.FEET}, false, 1);
+
+    /**
+     * Регистрация всех зачарований мода в реестре игры
+     */
     public static void registerModEnchantments() {
+        // Оружие
         register("absorb", ABSORB);
         register("rift", RIFT);
-        register("void_pull", VOID_PULL);
-        register("void_stability", VOID_STABILITY);
+
+        // Броня
+        register("void_nullification", VOID_NULLIFICATION);
+        register("void_aura", VOID_AURA);
+        register("shadow_treads", SHADOW_TREADS);
+
+        // Особые
         register("echo_acceleration", ECHO_ACCELERATION);
         register("void_limit", VOID_LIMIT);
     }
 
+    /**
+     * Вспомогательный метод для регистрации в реестре
+     */
     private static void register(String name, Enchantment enchantment) {
         Registry.register(Registries.ENCHANTMENT, new Identifier("beyondthedeep", name), enchantment);
     }

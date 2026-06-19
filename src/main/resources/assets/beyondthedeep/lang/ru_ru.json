@@ -16,5 +16,6 @@
   "guiName.beyondthedeep.mobFarm":"Переработчик Сущности",
   "tooltip.beyondthedeep.damage_bonus": "Резонанс Души",
   "item.beyondthedeep.void_requiem": "Реквием Бездны",
-  "message.beyondthedeep.void_echo": "Эхо Бездны затихает..."
+  "message.beyondthedeep.void_echo": "Эхо Бездны затихает...",
+  "message.beyondthedeep.rift_trigger": "Пространство трещит под твоим ударом!"
 }

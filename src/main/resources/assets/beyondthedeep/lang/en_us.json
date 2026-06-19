@@ -16,5 +16,6 @@
   "guiName.beyondthedeep.mobFarm": "Abyssal Processor",
   "tooltip.beyondthedeep.damage_bonus": "Soul Resonance",
   "item.beyondthedeep.void_requiem": "Void Requiem",
-  "message.beyondthedeep.void_echo": "The Void Echo fades..."
+  "message.beyondthedeep.void_echo": "The Void Echo fades...",
+  "message.beyondthedeep.rift_trigger": "Space tears under your strike!"
 }

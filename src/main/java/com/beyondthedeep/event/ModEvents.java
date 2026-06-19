@@ -5,10 +5,15 @@ import com.beyondthedeep.items.ModItems;
 import com.beyondthedeep.items.custom.VoidRequiemItem;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,9 +23,13 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.Monster;
 
 import java.util.*;
 
@@ -36,7 +45,10 @@ public class ModEvents {
         registerAttackEvents();
         registerDeathEvents();
         registerRitualEvents();
-        registerEnchantmentEffects();
+        registerEnchantmentEffects(); //absorb
+        registerRiftEffect(); // rift
+        registerArmorPassiveEvents(); // armor
+        registerEliteMobs();
         System.out.println("[BeyondTheDeep] ModEvents fully initialized with Evolution Rituals.");
     }
 
@@ -199,29 +211,56 @@ public class ModEvents {
             int level = EnchantmentHelper.getLevel(ModEnchantments.ABSORB, stack);
 
             if (level > 0) {
-                // Уровень 1: Пылесос лута
-                Box box = player.getBoundingBox().expand(8.0);
-                List<net.minecraft.entity.ItemEntity> items = world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, box, e -> true);
-                for (net.minecraft.entity.ItemEntity item : items) {
-                    item.setPosition(player.getX(), player.getY(), player.getZ());
-                }
+                // Увеличим радиус и добавим задержку, чтобы лут точно появился
+                world.getServer().execute(() -> { // Выполняем в следующем тике
+                    Box box = player.getBoundingBox().expand(10.0); // Радиус 10
+                    world.getEntitiesByClass(net.minecraft.entity.ItemEntity.class, box, e -> true)
+                            .forEach(item -> item.teleport(player.getX(), player.getY(), player.getZ()));
+                    world.getEntitiesByClass(net.minecraft.entity.ExperienceOrbEntity.class, box, e -> true)
+                            .forEach(orb -> orb.teleport(player.getX(), player.getY(), player.getZ()));
+                });
 
-                // 2. Собираем сферы опыта
-                List<net.minecraft.entity.ExperienceOrbEntity> orbs = world.getEntitiesByClass(net.minecraft.entity.ExperienceOrbEntity.class, box, e -> true);
-                for (net.minecraft.entity.ExperienceOrbEntity orb : orbs) {
-                    orb.setPosition(player.getX(), player.getY(), player.getZ());
-                }
-
-                // Уровень 2: Хил
-                if (level >= 2) player.heal(1.5f);
-
-                // Уровень 3: Сила
-                if (level >= 3) player.addStatusEffect(new net.minecraft.entity.effect.StatusEffectInstance(
-                        net.minecraft.entity.effect.StatusEffects.STRENGTH, 200, 0));
+                player.heal(1.0f + (level * 0.5f));
+                int duration = 100 + (level * 40);
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, duration, Math.min(level / 3, 2)));
             }
         });
     }
+    // Добавь эту Map в класс ModEvents или в отдельный менеджер кулдаунов
+    private static final Map<UUID, Long> RIFT_COOLDOWNS = new HashMap<>();
 
+    private static void registerRiftEffect() {
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            // Проверка кулдауна
+            long currentTime = System.currentTimeMillis();
+            long lastUsed = RIFT_COOLDOWNS.getOrDefault(player.getUuid(), 0L);
+
+            if (currentTime - lastUsed < 2000) return ActionResult.PASS;
+
+            ItemStack stack = player.getStackInHand(hand);
+            int level = EnchantmentHelper.getLevel(ModEnchantments.RIFT, stack);
+
+            if (level > 0 && world.random.nextFloat() < (0.2f + (level * 0.05f))) {
+                RIFT_COOLDOWNS.put(player.getUuid(), currentTime);
+
+                // Урон (используем DamageSources для 1.20.1)
+                entity.damage(world.getDamageSources().playerAttack(player), 1.0f + (0.2f * level));
+
+                // Статус эффекты
+                if (entity instanceof LivingEntity living) {
+                    living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, level * 20, 3));
+                }
+
+                player.sendMessage(Text.translatable("message.beyondthedeep.rift_trigger").formatted(Formatting.DARK_PURPLE), true);
+
+                // Визуальные эффекты (для 1.20.1 используем ServerWorld, если нужно спавнить частицы)
+                if (world instanceof ServerWorld serverWorld) {
+                    serverWorld.spawnParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 1, entity.getZ(), 10, 0.5, 0.5, 0.5, 0.1);
+                }
+            }
+            return ActionResult.PASS;
+        });
+    }
     public static void registerDeathEvents() {
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             List<ItemStack> savedStacks = deathStorage.remove(newPlayer.getUuid());
@@ -237,5 +276,79 @@ public class ModEvents {
                 newPlayer.sendMessage(Text.translatable("message.beyondthedeep.void_echo").formatted(Formatting.RED), true);
             }
         });
+    }
+    private static void registerArmorPassiveEvents() {
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            // Проходим по всем мирам на сервере
+            for (net.minecraft.server.world.ServerWorld world : server.getWorlds()) {
+                // Проходим по всем игрокам в этом мире
+                for (net.minecraft.server.network.ServerPlayerEntity player : world.getPlayers()) {
+
+                    // Оптимизация: раз в 10 тиков (0.5 сек)
+                    if (player.age % 10 != 0) continue;
+
+                    // --- 1. SHADOW TREADS (Ботинки) ---
+                    ItemStack boots = player.getEquippedStack(EquipmentSlot.FEET);
+                    if (EnchantmentHelper.getLevel(ModEnchantments.SHADOW_TREADS, boots) > 0) {
+                        if (world.getLightLevel(player.getBlockPos()) < 7) {
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 25, 0, true, false, false));
+                        }
+                    }
+
+                    // --- 2. VOID AURA (Шлем) ---
+                    // Здесь будет логика для Void Aura, когда мы сделаем элитных мобов
+                }
+            }
+        });
+    }
+    public static void registerEliteMobs() {
+        ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
+            // Проверяем, что это сервер, монстр и не игрок
+            if (world.isClient || !(entity instanceof net.minecraft.entity.mob.Monster) || entity instanceof PlayerEntity) {
+                return;
+            }
+
+            LivingEntity mob = (LivingEntity) entity;
+            NbtCompound nbt = new NbtCompound();
+            mob.writeNbt(nbt);
+
+            // Если моб уже был проверен (есть тег is_checked), пропускаем
+            if (nbt.contains("is_checked")) {
+                return;
+            }
+
+            // Отмечаем, что моб прошел проверку
+            nbt.putBoolean("is_checked", true);
+
+            // 15% шанс стать элитным
+            if (world.random.nextFloat() < 0.15f) {
+                nbt.putBoolean("is_elite", true);
+                mob.readNbt(nbt); // Записываем изменения NBT
+                makeElite(mob);
+            } else {
+                mob.readNbt(nbt); // Просто сохраняем "is_checked", чтобы не проверять снова
+            }
+        });
+    }
+
+    private static void makeElite(LivingEntity mob) {
+        // Здоровье х1.75
+        mob.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(mob.getMaxHealth() * 1.75);
+        mob.setHealth(mob.getMaxHealth());
+
+        // Урон: +2 единицы (1 сердце) к базовому
+        var attack = mob.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+        if (attack != null) attack.setBaseValue(attack.getBaseValue() + 4.0);
+
+        // Скорость +20%
+        var speed = mob.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        if (speed != null) speed.setBaseValue(speed.getBaseValue() * 1.2);
+
+        // Визуал
+        mob.setGlowing(true);
+
+        // Эффект: при ударе моб дает игроку замедление (через Mixin или просто пассив)
+        // Пока оставим твой Resistance, чтобы он был чуть живучее
+        mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, -1, 0, false, false, false));
     }
 }
