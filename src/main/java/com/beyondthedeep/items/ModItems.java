@@ -2,10 +2,7 @@ package com.beyondthedeep.items;
 
 import com.beyondthedeep.items.custom.VoidRequiemItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -34,6 +31,12 @@ public class ModItems {
     // Регистрация предметов с функционалом
     // Регистрация Вытягивателя Душ
 // Параметры: (название_в_игре, объект_предмета)
+    // Добавляем Ядро Бездны
+    public static final Item VOID_CORE = registerItem("void_core", new Item(new FabricItemSettings().maxCount(1).fireproof()));
+
+    // Добавляем регистрацию меча в общий поток
+    public static final SwordItem VOID_ALLOY_SWORD = registerItem("void_alloy_sword",
+            new SwordItem(ModToolMaterials.VOID_MATERIAL, 4, -2.4f, new FabricItemSettings()));
     public static final Item SOUL_EXTRACTOR = registerItem("soul_extractor",
             new VoidTool(
                     ModToolMaterials.VOID_MATERIAL, // МАТЕРИАЛ: можно заменить на свой кастомный (например, VOID_MATERIAL)

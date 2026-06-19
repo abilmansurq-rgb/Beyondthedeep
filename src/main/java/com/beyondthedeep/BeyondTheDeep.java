@@ -2,7 +2,9 @@ package com.beyondthedeep;
 
 import com.beyondthedeep.blocks.ModBlockEntities;
 import com.beyondthedeep.blocks.ModBlocks;
+import com.beyondthedeep.enchantments.ModEnchantments;
 import com.beyondthedeep.event.ModEvents;
+import com.beyondthedeep.event.ModLootTableHandler;
 import com.beyondthedeep.items.MobCardItem;
 import com.beyondthedeep.items.ModItems;
 import com.beyondthedeep.screen.ModScreenHandlers;
@@ -42,6 +44,8 @@ public class BeyondTheDeep implements ModInitializer {
 						entries.add(ModItems.MOB_CARD.asItem());
 						entries.add(ModItems.SOUL_EXTRACTOR.asItem());
 						entries.add(ModItems.VOID_REQUIEM.asItem());
+						entries.add(ModItems.VOID_ALLOY_SWORD.asItem());
+						entries.add(ModItems.VOID_CORE.asItem());
 						entries.add(ModItems.VOID_HELMET.asItem());
 						entries.add(ModItems.VOID_CHESTPLATE.asItem());
 						entries.add(ModItems.VOID_LEGGINGS.asItem());
@@ -58,6 +62,8 @@ public class BeyondTheDeep implements ModInitializer {
 		ModEvents.registerEvents();
 		ModBlockEntities.registerAllBlockEntities(); // ДОБАВЬ ЭТО
 		ModScreenHandlers.registerAllScreenHandlers(); // ДОБАВЬ ЭТО
+		ModEnchantments.registerModEnchantments();
+		ModLootTableHandler.registerLootTables();
 
 
 		// Регистрация события смерти

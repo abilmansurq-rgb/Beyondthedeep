@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "beyondthedeep:item/void_requiem"
+    "layer0": "beyondthedeep:item/void_alloy_sword"
   }
 }
