@@ -34,11 +34,11 @@ public class MobFarmScreenHandler extends ScreenHandler {
         this.propertyDelegate = delegate;
 
         // Добавляем слоты блока (Карточка, Топливо, 3 выхода)
-        this.addSlot(new Slot(inventory, 0, 80, 17)); // Карточка
-        this.addSlot(new Slot(inventory, 1, 80, 53)); // Топливо
-        this.addSlot(new Slot(inventory, 2, 116, 35)); // Выход 1
-        this.addSlot(new Slot(inventory, 3, 134, 35)); // Выход 2
-        this.addSlot(new Slot(inventory, 4, 152, 35)); // Выход 3
+        this.addSlot(new Slot(inventory, 0, 44, 20)); // Карточка
+        this.addSlot(new Slot(inventory, 1, 116, 20)); // Топливо
+        this.addSlot(new Slot(inventory, 2, 44, 65)); // Выход 1
+        this.addSlot(new Slot(inventory, 3, 80, 65)); // Выход 2
+        this.addSlot(new Slot(inventory, 4, 116, 65)); // Выход 3
 
         // Добавляем инвентарь игрока
         for (int i = 0; i < 3; ++i) {

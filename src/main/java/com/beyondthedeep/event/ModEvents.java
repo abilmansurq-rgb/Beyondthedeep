@@ -49,6 +49,7 @@ public class ModEvents {
         registerRiftEffect(); // rift
         registerArmorPassiveEvents(); // armor
         registerEliteMobs();
+        registerEliteDrops();
         System.out.println("[BeyondTheDeep] ModEvents fully initialized with Evolution Rituals.");
     }
 
@@ -350,5 +351,25 @@ public class ModEvents {
         // Эффект: при ударе моб дает игроку замедление (через Mixin или просто пассив)
         // Пока оставим твой Resistance, чтобы он был чуть живучее
         mob.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, -1, 0, false, false, false));
+    }
+    private static void registerEliteDrops() {
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, entity, killedEntity) -> {
+            LivingEntity mob = (LivingEntity) killedEntity;
+
+            // Читаем NBT, чтобы проверить, элитный ли моб
+            NbtCompound nbt = new NbtCompound();
+            mob.writeNbt(nbt);
+
+            if (nbt.getBoolean("is_elite")) {
+                // Спавним опыт: например, от 20 до 40 единиц опыта
+                int expAmount = 20 + world.random.nextInt(21);
+                net.minecraft.entity.ExperienceOrbEntity.spawn( world, mob.getPos(), expAmount);
+
+                // Дополнительный дроп осколков (как мы обсуждали ранее)
+                ItemEntity drop = new ItemEntity(world, mob.getX(), mob.getY(), mob.getZ(),
+                        new ItemStack(ModItems.VOID_SHARD, 1 + world.random.nextInt(3)));
+                world.spawnEntity(drop);
+            }
+        });
     }
 }

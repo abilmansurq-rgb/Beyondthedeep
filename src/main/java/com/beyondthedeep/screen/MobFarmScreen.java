@@ -35,12 +35,12 @@ public class MobFarmScreen extends HandledScreen<MobFarmScreenHandler> {
         // Рисуем бар прогресса (красный)
         // x + 80, y + 30 — это координаты слота карточки (поправь под свои нужды)
         int progressWidth = (progress * 24) / 100; // Если прогресс 0-100
-        context.fill(x + 80, y + 30, x + 80 + progressWidth, y + 35, 0xFFFF0000);
+        context.fill(x + 44, y + 38, x + 44 + progressWidth, y + 45, 0xFFFF0000);
 
         // Рисуем бар топлива (синий)
         // x + 80, y + 60 — это координаты слота топлива
         int fuelWidth = (fuel * 24) / 1600; // 1600 — наш максимум топлива
-        context.fill(x + 80, y + 60, x + 80 + fuelWidth, y + 65, 0xFF0000FF);
+        context.fill(x + 116, y + 38, x + 116 + fuelWidth, y + 45, 0xFF0000FF);
     }
 
     @Override
