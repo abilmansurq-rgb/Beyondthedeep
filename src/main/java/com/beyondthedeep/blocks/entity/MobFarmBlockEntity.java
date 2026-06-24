@@ -15,6 +15,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -82,27 +83,27 @@ public class MobFarmBlockEntity extends BlockEntity implements ExtendedScreenHan
         fuelLeft = nbt.getInt("mob_farm.fuelLeft"); // ДОБАВЬ ЭТУ СТРОКУ
     }
 
+    // ... внутри MobFarmBlockEntity.java ...
+
     private void spawnMobDrop() {
-        ItemStack cardStack = this.inventory.get(0); // Карта в слоте 0
+        ItemStack cardStack = this.inventory.get(0);
 
-        // Проверяем, есть ли у предмета вообще NBT и нужный нам тег
+        // 1. Проверяем NBT и наличие нашего ключа
         if (cardStack.hasNbt() && cardStack.getNbt().contains("MobName")) {
-            String mobName = cardStack.getNbt().getString("MobName");
+            // 2. Достаем строку-ID (например, "minecraft:zombie")
+            String mobIdString = cardStack.getNbt().getString("MobName");
+            Identifier mobId = new Identifier(mobIdString); // Создаем объект Identifier
 
-            //System.out.println("Ферма читает карту: " + mobName); // Теперь увидишь правильное имя!
+            // 3. Получаем дроп (теперь используем метод с Identifier)
+            ItemStack loot = getLootForMob(mobId);
 
-            // Получаем дроп на основе ID
-            ItemStack loot = getLootForMob(mobName);
-
-            // Пытаемся положить в слоты 2, 3, 4
+            // ... логика слотов остается без изменений ...
             for (int i = 2; i <= 4; i++) {
                 ItemStack slotStack = this.inventory.get(i);
-
-                // Если слот пуст или там лежит такой же предмет и есть место
                 if (slotStack.isEmpty()) {
                     this.inventory.set(i, loot);
                     return;
-                } else if (slotStack.isOf(loot.getItem()) && slotStack.getCount() < slotStack.getMaxCount()) {
+                } else if (ItemStack.canCombine(slotStack, loot) && slotStack.getCount() < slotStack.getMaxCount()) {
                     slotStack.increment(loot.getCount());
                     return;
                 }
@@ -110,14 +111,21 @@ public class MobFarmBlockEntity extends BlockEntity implements ExtendedScreenHan
         }
     }
 
-    // Отдельный метод для чистоты кода
-    private ItemStack getLootForMob(String mobName) {
-        String cleanId = mobName.toLowerCase().replace(" ", "_"); // Уберет пробелы и большие буквы
-        return switch (cleanId) {
-            case "slime" -> new ItemStack(net.minecraft.item.Items.SLIME_BALL, 2);
-            case "wither_skeleton" -> new ItemStack(net.minecraft.item.Items.COAL, 1);
-            case "zombie" -> new ItemStack(net.minecraft.item.Items.ROTTEN_FLESH, 2);
-            default -> new ItemStack(net.minecraft.item.Items.DIRT, 1);
+    // 4. НОВЫЙ МЕТОД ПОИСКА ЛУТА
+    private ItemStack getLootForMob(Identifier mobId) {
+        // Используем toString() ID для проверки. Это надежно на 100%
+        String id = mobId.toString();
+
+        // Используем switch, который работает по ID сущности
+        return switch (id) {
+            case "minecraft:slime" -> new ItemStack(net.minecraft.item.Items.SLIME_BALL, 2);
+            case "minecraft:wither_skeleton" -> new ItemStack(net.minecraft.item.Items.COAL, 1);
+            case "minecraft:zombie" -> new ItemStack(net.minecraft.item.Items.ROTTEN_FLESH, 2);
+
+            // Ты можешь легко добавить мобов из других модов:
+            // case "someothermod:boss" -> new ItemStack(ModItems.VOID_SHARD, 1);
+
+            default -> new ItemStack(net.minecraft.item.Items.DIRT, 1); // "Заглушка" на случай, если моб не прописан
         };
     }
 

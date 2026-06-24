@@ -76,7 +76,8 @@ public class BeyondTheDeep implements ModInitializer {
 						// Безопасная проверка NBT
 						if (stack.getItem() == ModItems.MOB_CARD && (stack.getNbt() == null || !stack.getNbt().contains("MobName"))) {
 
-							MobCardItem.setMob(stack, entity.getType().getName().getString());
+							Identifier entityId = Registries.ENTITY_TYPE.getId(entity.getType());
+							MobCardItem.setMob(stack, entityId.toString());
 
 							if (entity.getWorld() instanceof ServerWorld serverWorld) {
 								serverWorld.spawnParticles(ParticleTypes.LARGE_SMOKE,

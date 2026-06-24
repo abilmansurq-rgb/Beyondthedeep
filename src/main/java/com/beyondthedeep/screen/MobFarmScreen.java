@@ -14,8 +14,9 @@ public class MobFarmScreen extends HandledScreen<MobFarmScreenHandler> {
 
     public MobFarmScreen(MobFarmScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
-        this.backgroundHeight = 176; // Ставь свое значение высоты здесь!
-        this.backgroundWidth = 176;  // Ставь свою ширину
+        this.backgroundWidth = 176;
+        this.backgroundHeight = 167; // Оставь пока так
+        this.playerInventoryTitleY = this.backgroundHeight - 94; // Это автоматически поставит заголовок "Инвентарь" на правильное место
     }
 
     @Override
